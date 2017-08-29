@@ -16,6 +16,14 @@ parts:
     source-type: git
     prepare: |
       git apply ../../../0009-UBUNTU-SAUCE-no-up-apparmor-rebase-of-apparmor3.5-be.patch
+      git clone -b aufs4.9 https://github.com/sfjro/aufs4-standalone.git aufs4.9
+      git apply aufs4.9/aufs4-kbuild.patch
+      git apply aufs4.9/aufs4-base.patch
+      git apply aufs4.9/aufs4-mmap.patch
+      git apply aufs4.9/aufs4-standalone.patch
+      cp -Rp aufs4.9/Documentation/* Documentation/
+      cp -Rp aufs4.9/fs/* fs/
+      cp aufs4.9/include/uapi/linux/aufs_type.h include/uapi/linux/
     kdefconfig: [odroidxu4_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
     kernel-initrd-modules:
       - squashfs

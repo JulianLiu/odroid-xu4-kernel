@@ -1,5 +1,5 @@
 name: odroidxu4-kernel
-version: 4.9.38
+version: 4.14.7
 summary: Hardkernel odroid xu4 armhf kernel
 description: odroid xu4 kernel as a snap
 type: kernel
@@ -12,24 +12,25 @@ parts:
   kernel:
     plugin: kernel
     source: git://github.com/JulianLiu/linux-odroid
-    source-branch: odroidxu4-4.9.y
+    source-branch: odroidxu4-4.14.y
     source-type: git
     prepare: |
-      git apply ../../../0009-UBUNTU-SAUCE-no-up-apparmor-rebase-of-apparmor3.5-be.patch
-      git clone -b aufs4.9 https://github.com/sfjro/aufs4-standalone.git aufs4.9
-      git apply aufs4.9/aufs4-kbuild.patch
-      git apply aufs4.9/aufs4-base.patch
-      git apply aufs4.9/aufs4-mmap.patch
-      git apply aufs4.9/aufs4-standalone.patch
-      cp -Rp aufs4.9/Documentation/* Documentation/
-      cp -Rp aufs4.9/fs/* fs/
-      cp aufs4.9/include/uapi/linux/aufs_type.h include/uapi/linux/
+      git clone -b aufs4.14 https://github.com/sfjro/aufs4-standalone.git aufs4.14
+      git apply aufs4.14/aufs4-kbuild.patch
+      git apply aufs4.14/aufs4-base.patch
+      git apply aufs4.14/aufs4-mmap.patch
+      cp -Rp aufs4.14/Documentation/* Documentation/
+      cp -Rp aufs4.14/fs/* fs/
+      cp aufs4.14/include/uapi/linux/aufs_type.h include/uapi/linux/
+      mkdir -p $SNAPCRAFT_PART_INSTALL/lib/firmware
     kdefconfig: [odroidxu4_defconfig, snappy/generic.config, snappy/security.config, snappy/systemd.config, snappy/snappy.config, snappy/containers.config]
     kernel-initrd-modules:
       - squashfs
     kernel-image-target: zImage
     kernel-device-trees:
       - exynos5422-odroidxu4
+    # as of 4.14, in-kernel firmware has been removed, no firmware_install rule in Makefile
+    kernel-with-firmware: False
     build-packages: [bc, lzop, cpio, kmod]
   firmware:
     plugin: nil

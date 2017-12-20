@@ -15,6 +15,8 @@ parts:
     source-branch: odroidxu4-4.14.y
     source-type: git
     prepare: |
+      git apply ../../../001-apparmor-add-base-infastructure-for-socket-mediation.patch
+      git apply ../../../002-apparmor-af_unix-mediation.patch
       git clone -b aufs4.14 https://github.com/sfjro/aufs4-standalone.git aufs4.14
       git apply aufs4.14/aufs4-kbuild.patch
       git apply aufs4.14/aufs4-base.patch
